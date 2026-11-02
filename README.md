@@ -5,6 +5,7 @@
 ## Навигация
 
 - [Инструкция ИИ-инженера-проектировщика](INSTRUCTION.md)
+- [Глоссарий проекта](DOCUMENTATION/GLOSSARY.md)
 - [Конструкторская разработка — Development](Development/README.md)
 - [Паспорт проекта](PROJECT/PASSPORT.md)
 - [Технические требования](PROJECT/REQUIREMENTS.md)
