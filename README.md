@@ -7,6 +7,7 @@
 - [Инструкция ИИ-инженера-проектировщика](INSTRUCTION.md)
 - [Глоссарий проекта](DOCUMENTATION/GLOSSARY.md)
 - [Правила управления редакциями текстовых документов](DOCUMENTATION/DOCUMENT_REVISION_CONTROL.md)
+- [Архив редакций проект-задания ТЗ-ОМО-001](Development/CONCEPT/REVISIONS/)
 - [Конструкторская разработка — Development](Development/README.md)
 - [Паспорт проекта](PROJECT/PASSPORT.md)
 - [Технические требования](PROJECT/REQUIREMENTS.md)
