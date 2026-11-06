@@ -162,7 +162,7 @@ try {
   for (const name of tools) console.log(`- ${name}`);
 
   // Classify by tool name only; descriptions can cause false positives.
-  const knowledgeBase = /knowledge[\\s_-]*base|(?:^|[_-])kb(?:[_-]|$)|баз[аы]\\s+знан/i;
+  const knowledgeBase = /knowledge[\s_-]*base|(?:^|[_-])kb(?:[_-]|$)|баз[аы]\s+знан/i;
   const operationPatterns = {
     list: /(?:^|[_-])(list|search|query|find)(?:[_-]|$)|спис|поиск/i,
     create: /(?:^|[_-])(create|add|insert|new)(?:[_-]|$)|созда|добав/i,
