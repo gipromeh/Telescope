@@ -26,7 +26,14 @@ const logPath = path.join(localRoot, "publisher.log");
 const args = new Set(process.argv.slice(2));
 
 function log(message) {
-  console.log(`[${new Date().toISOString()}] ${message}`);
+  const line = `[${new Date().toISOString()}] ${message}`;
+  console.log(line);
+  try {
+    mkdirSync(localRoot, { recursive: true });
+    appendFileSync(logPath, `${line}\n`, "utf8");
+  } catch {
+    console.error("Could not write the local publisher log file.");
+  }
 }
 
 function normalizeText(value) {
