@@ -15,18 +15,18 @@ The local process polls `MEETINGS/TO_PUBLISH/` on `main` every five minutes. In 
 - If the expected editors or controls are not present, the tool stops before clicking Save.
 - The Markdown source is entered as text. Markdown styling is not converted to YouGile rich-text formatting in this initial version.
 
-The UI selectors are based on the current YouGile screen and must be checked in a dry run before enabling the scheduled publisher. Changes to YouGile's interface may require selector updates.
+The UI inspection checks route navigation and the Add page control. It does not test the editor or Save operation; those selectors remain unverified until a deliberate supervised publishing trial. Changes to YouGile's interface may require selector updates.
 
 ## One-time setup
 
 1. Install Node.js 22 or newer.
 2. In this directory, run `npm install`.
-3. Run `npm run setup`. A separate browser opens at YouGile. Sign in yourself; the script does not read or type credentials. Press Enter in the terminal after the project is visible.
-4. Run `npm run dry-run` and confirm it sees the queue files without publishing anything.
-5. To publish automatically, run `install-windows.ps1` from PowerShell in this directory. It registers a per-user Task Scheduler job to start at the next Windows sign-in. The computer must be on, the user signed in, and the network available. The task uses an interactive browser session.
-6. To verify or remove the task, open Windows Task Scheduler and find **Telescope YouGile KB Publisher**.
+3. Run `npm run install:browser` to install the dedicated Chromium browser.\n4. Run `npm run setup`. A separate browser opens at YouGile. Sign in yourself; the script does not read or type credentials. Press Enter in the terminal after the project is visible.
+5. Run `npm run inspect-ui`. It opens the separate browser profile, navigates to the configured section, and checks the Add page control without opening the editor or creating a page.\n6. Run `npm run dry-run` and confirm it sees the queue files without publishing anything.
+7. To publish automatically, run `install-windows.ps1` from PowerShell in this directory. It registers a per-user Task Scheduler job to start at the next Windows sign-in. The computer must be on, the user signed in, and the network available. The task uses an interactive browser session.
+8. To verify or remove the task, open Windows Task Scheduler and find **Telescope YouGile KB Publisher**.
 
-The separate browser profile and publisher state are stored under the current user's local application data, outside the repository. Protect the Windows user account; do not copy or commit the profile. If a page already exists, the tool skips it. To publish a corrected protocol as a new page, use a new unique filename.
+The separate browser profile, publisher state, and log (`publisher.log`) are stored under the current user's local application data, outside the repository. Protect the Windows user account; do not copy or commit the profile. If a page already exists, the tool skips it. To publish a corrected protocol as a new page, use a new unique filename.
 
 ## Add a protocol to the queue
 
