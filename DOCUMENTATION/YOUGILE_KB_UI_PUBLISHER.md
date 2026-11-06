@@ -21,8 +21,10 @@ The UI inspection checks route navigation and the Add page control. It does not 
 
 1. Install Node.js 22 or newer.
 2. In this directory, run `npm install`.
-3. Run `npm run install:browser` to install the dedicated Chromium browser.\n4. Run `npm run setup`. A separate browser opens at YouGile. Sign in yourself; the script does not read or type credentials. Press Enter in the terminal after the project is visible.
-5. Run `npm run inspect-ui`. It opens the separate browser profile, navigates to the configured section, and checks the Add page control without opening the editor or creating a page.\n6. Run `npm run dry-run` and confirm it sees the queue files without publishing anything.
+3. Run `npm run install:browser` to install the dedicated Chromium browser.
+4. Run `npm run setup`. A separate browser opens at YouGile. Sign in yourself; the script does not read or type credentials. Press Enter in the terminal after the project is visible.
+5. Run `npm run inspect-ui`. It opens the separate browser profile, navigates to the configured section, and checks the Add page control without opening the editor or creating a page.
+6. Run `npm run dry-run` and confirm it sees the queue files without publishing anything.
 7. To publish automatically, run `install-windows.ps1` from PowerShell in this directory. It registers a per-user Task Scheduler job to start at the next Windows sign-in. The computer must be on, the user signed in, and the network available. The task uses an interactive browser session.
 8. To verify or remove the task, open Windows Task Scheduler and find **Telescope YouGile KB Publisher**.
 
