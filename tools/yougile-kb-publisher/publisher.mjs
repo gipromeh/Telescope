@@ -3,6 +3,7 @@ import { stdin, stdout } from "node:process";
 import { homedir } from "node:os";
 import path from "node:path";
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
+import { appendFileSync, mkdirSync } from "node:fs";
 import { chromium } from "playwright";
 
 const owner = "gipromeh";
@@ -21,6 +22,7 @@ const localRoot = process.env.TELESCOPE_KB_PUBLISHER_HOME
   : path.join(process.env.LOCALAPPDATA || homedir(), "Telescope", "YouGileKbPublisher");
 const profileDir = path.join(localRoot, "browser-profile");
 const statePath = path.join(localRoot, "published-state.json");
+const logPath = path.join(localRoot, "publisher.log");
 const args = new Set(process.argv.slice(2));
 
 function log(message) {
@@ -135,6 +137,25 @@ async function clickExactText(page, text, description = text) {
   const count = await locator.count();
   if (count === 0) throw new Error(`Could not find ${description} in the YouGile page.`);
   await locator.first().click({ timeout: 15_000 });
+}
+
+async function inspectTargetUi() {
+  const { context, page } = await openYouGile();
+  try {
+    await clickExactText(page, projectName, "the configured YouGile project");
+    await clickExactText(page, knowledgeBaseName, "the configured Knowledge Base");
+    await clickExactText(page, parentPageName, "the configured meetings section");
+
+    const addPage = page.getByText("Добавить страницу", { exact: true });
+    const addPageCount = await addPage.count();
+    const saveButtonCount = await page.getByRole("button", { name: "Сохранить", exact: true }).count();
+    log(`UI inspection reached the target section; Add page matches: ${addPageCount}; Save buttons visible before opening editor: ${saveButtonCount}. No page was created.`);
+    if (addPageCount !== 1 || saveButtonCount !== 0) {
+      throw new Error("The target UI did not match the expected safe inspection state.");
+    }
+  } finally {
+    await context.close();
+  }
 }
 
 async function findExistingPage(page, title) {
