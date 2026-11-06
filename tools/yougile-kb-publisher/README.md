@@ -18,12 +18,15 @@ From this directory:
 
 ```powershell
 npm install
+npm run install:browser
 npm run setup
+npm run inspect-ui
 npm run dry-run
 ```
 
 - `npm run setup` opens a dedicated browser profile at YouGile. Sign in manually. Credentials are not read or stored by this program; the browser's local profile retains the session.
-- `npm run inspect-ui` opens the separate browser profile, navigates to the configured project/Knowledge Base/section, and checks the Add page control. It does not open the editor or create a page.\n- `npm run dry-run` checks the GitHub queue and prints page titles only. It does not open YouGile or create pages.
+- `npm run inspect-ui` opens the separate browser profile, navigates to the configured project/Knowledge Base/section, and checks the Add page control. It does not open the editor or create a page.
+- `npm run dry-run` checks the GitHub queue and prints page titles only. It does not open YouGile or create pages.
 - After confirming the dry-run output and the YouGile session, run `install-windows.ps1` from PowerShell in this folder. It registers a per-user Windows task that starts the publisher at sign-in. The task runs `npm run publish` behavior continuously and checks GitHub every five minutes.
 - The computer must be on and the Windows user signed in for the browser job to run. Logs are written to `%LOCALAPPDATA%\\Telescope\\YouGileKbPublisher\\publisher.log`. If it was off, queued files are discovered at the next sign-in.
 
