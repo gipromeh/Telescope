@@ -1,0 +1,17 @@
+{
+  "name": "telescope-yougile-kb-ui-publisher",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "playwright": "1.64.1"
+  },
+  "scripts": {
+    "setup": "node publisher.mjs --setup",
+    "dry-run": "node publisher.mjs --dry-run",
+    "publish": "node publisher.mjs --publish --watch"
+  }
+}
