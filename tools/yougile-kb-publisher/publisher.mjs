@@ -84,26 +84,19 @@ async function listQueuedFiles() {
     entry.name.toLowerCase().endsWith(".md") &&
     entry.name.toLowerCase() !== "readme.md" &&
     typeof entry.path === "string" &&
-    typeof entry.sha === "string" &&
-    typeof entry.download_url === "string"
+    typeof entry.sha === "string"
   );
 }
 
 async function readQueuedFile(entry) {
-  const sourceUrl = new URL(entry.download_url);
-  if (sourceUrl.protocol !== "https:" || sourceUrl.hostname !== "raw.githubusercontent.com") {
-    throw new Error("GitHub returned an unexpected meeting file URL.");
+  const blob = await githubJson(
+    `https://api.github.com/repos/${owner}/${repository}/git/blobs/${entry.sha}`,
+  );
+  if (blob.encoding !== "base64" || typeof blob.content !== "string") {
+    throw new Error(`GitHub returned an unexpected blob format for ${entry.name}.`);
   }
 
-  const response = await fetch(sourceUrl, {
-    signal: AbortSignal.timeout(30_000),
-    headers: { "User-Agent": "Telescope-YouGile-KB-UI-Publisher" },
-  });
-  if (!response.ok) {
-    throw new Error(`Could not fetch queued file ${entry.name} (HTTP ${response.status}).`);
-  }
-
-  const body = await response.text();
+  const body = Buffer.from(blob.content, "base64").toString("utf8");
   if (Buffer.byteLength(body, "utf8") > maxDocumentBytes) {
     throw new Error(`Queued file ${entry.name} exceeds the 1 MiB safety limit.`);
   }
