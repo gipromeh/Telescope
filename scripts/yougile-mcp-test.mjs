@@ -23,6 +23,7 @@ const timeoutMs = 30_000;
 const protocolVersion = "2025-03-26";
 let nextId = 1;
 let sessionId;
+let negotiatedProtocolVersion = protocolVersion;
 
 function safeText(value) {
   return String(value)
@@ -42,8 +43,8 @@ async function post(payload, { expectResponse = true } = {}) {
         "Content-Type": "application/json",
         Accept: "application/json, text/event-stream",
         ...(sessionId ? { "Mcp-Session-Id": sessionId } : {}),
-        ...(payload.method === "initialize"
-          ? { "MCP-Protocol-Version": protocolVersion }
+        ...(payload.method !== "initialize"
+          ? { "MCP-Protocol-Version": negotiatedProtocolVersion }
           : {}),
       },
       body: JSON.stringify(payload),
@@ -128,6 +129,8 @@ try {
     initializeId,
     "initialize",
   );
+
+  negotiatedProtocolVersion = initialized.protocolVersion ?? protocolVersion;
 
   await post(
     { jsonrpc: "2.0", method: "notifications/initialized" },
