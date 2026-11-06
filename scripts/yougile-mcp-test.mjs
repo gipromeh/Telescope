@@ -155,26 +155,27 @@ try {
 
   const tools = toolsReply.tools
     .filter((item) => item && typeof item.name === "string")
-    .map((item) => ({ name: safeText(item.name), description: safeText(item.description ?? "") }));
+    .map((item) => safeText(item.name));
 
   console.log(`MCP initialized (protocol ${safeText(initialized.protocolVersion ?? protocolVersion)}).`);
   console.log(`Tools reported: ${tools.length}`);
-  for (const tool of tools) console.log(`- ${tool.name}`);
+  for (const name of tools) console.log(`- ${name}`);
 
-  const knowledgeBase = /knowledge[\s_-]*base|баз[аы]\s+знан/i;
+  // Classify by tool name only; descriptions can cause false positives.
+  const knowledgeBase = /knowledge[\s_-]*base|(?:^|[_-])kb(?:[_-]|$)|баз[аы]\s+знан/i;
   const operationPatterns = {
-    list: /\b(list|search|get|read|fetch)\b|спис|получ|найт|просмотр/i,
-    create: /\b(create|add|insert|new)\b|созда|добав/i,
-    update: /\b(update|edit|modify|patch|replace)\b|обнов|измен|редакт/i,
+    list: /(?:^|[_-])(list|search|query|find)(?:[_-]|$)|спис|поиск/i,
+    create: /(?:^|[_-])(create|add|insert|new)(?:[_-]|$)|созда|добав/i,
+    update: /(?:^|[_-])(update|edit|modify|patch|replace)(?:[_-]|$)|обнов|измен|редакт/i,
   };
 
   console.log("Knowledge Base operations:");
   for (const [operation, pattern] of Object.entries(operationPatterns)) {
     const matches = tools
-      .filter((tool) => knowledgeBase.test(`${tool.name} ${tool.description}`))
-      .filter((tool) => pattern.test(`${tool.name} ${tool.description}`));
+      .filter((name) => knowledgeBase.test(name))
+      .filter((name) => pattern.test(name));
     console.log(`- ${operation}: ${matches.length ? "available" : "not detected"}`);
-    for (const match of matches) console.log(`  - ${match.name}`);
+    for (const name of matches) console.log(`  - ${name}`);
   }
 
   console.log("Diagnostic is read-only: only initialize, initialized notification, and tools/list were sent.");
