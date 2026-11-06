@@ -12,6 +12,8 @@
   "scripts": {
     "setup": "node publisher.mjs --setup",
     "dry-run": "node publisher.mjs --dry-run",
-    "publish": "node publisher.mjs --publish --watch"
+    "publish": "node publisher.mjs --publish --watch",
+    "install:browser": "playwright install chromium",
+    "inspect-ui": "node publisher.mjs --inspect-ui"
   }
 }
