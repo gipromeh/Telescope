@@ -1,5 +1,10 @@
 # История изменений
 
+## 2026-11-06 — 0.15.0
+
+- Обновлены GitHub Actions checkout и setup-node до поддерживаемых major-версий с Node.js 24.
+- Runner зафиксирован на Ubuntu 24.04, чтобы избежать неожиданного перехода метки ubuntu-latest на Ubuntu 26.
+
 ## 2026-11-06 — 0.14.0
 
 - Добавлен ручной GitHub Actions workflow для безопасной диагностики Streamable HTTP подключения к YouGile MCP.
