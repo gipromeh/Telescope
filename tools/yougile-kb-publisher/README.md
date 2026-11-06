@@ -23,9 +23,9 @@ npm run dry-run
 ```
 
 - `npm run setup` opens a dedicated browser profile at YouGile. Sign in manually. Credentials are not read or stored by this program; the browser's local profile retains the session.
-- `npm run dry-run` checks the GitHub queue and prints page titles only. It does not open YouGile or create pages.
+- `npm run inspect-ui` opens the separate browser profile, navigates to the configured project/Knowledge Base/section, and checks the Add page control. It does not open the editor or create a page.\n- `npm run dry-run` checks the GitHub queue and prints page titles only. It does not open YouGile or create pages.
 - After confirming the dry-run output and the YouGile session, run `install-windows.ps1` from PowerShell in this folder. It registers a per-user Windows task that starts the publisher at sign-in. The task runs `npm run publish` behavior continuously and checks GitHub every five minutes.
-- The computer must be on and the Windows user signed in for the browser job to run. If it was off, queued files are discovered at the next sign-in.
+- The computer must be on and the Windows user signed in for the browser job to run. Logs are written to `%LOCALAPPDATA%\\Telescope\\YouGileKbPublisher\\publisher.log`. If it was off, queued files are discovered at the next sign-in.
 
 To remove the scheduled task, open Windows Task Scheduler and delete **Telescope YouGile KB Publisher**.
 
@@ -40,4 +40,4 @@ To remove the scheduled task, open Windows Task Scheduler and delete **Telescope
 - This is an unofficial UI automation workaround. Interface changes can require code updates.
 - Because Telescope is a public GitHub repository, this design avoids a self-hosted GitHub Actions runner. GitHub warns that untrusted pull requests can compromise self-hosted runner machines.
 
-This initial code must be exercised in dry-run mode and its interface selectors reviewed before the scheduled job is enabled. It does not approve meeting proposals or change engineering requirements.
+This initial code must be exercised with `npm run inspect-ui` and in dry-run mode before the scheduled job is enabled. The UI check verifies navigation and the Add page control, but does not verify editor fields or save behavior. It does not approve meeting proposals or change engineering requirements.
