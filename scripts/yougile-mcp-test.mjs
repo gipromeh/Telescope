@@ -186,11 +186,19 @@ try {
       const required = Array.isArray(listTool.inputSchema?.required)
         ? listTool.inputSchema.required
         : [];
-      if (required.length > 0) {
-        console.log(`Read-only KB probe skipped; required arguments: ${required.join(", ")}.`);
-        const properties = listTool.inputSchema?.properties ?? {};
-        for (const [name, definition] of Object.entries(properties)) {
-          const typeOptions = definition.anyOf ?? definition.oneOf ?? [];
+      const properties = listTool.inputSchema?.properties ?? {};
+      const acceptsNull = (definition) => {
+        if (definition.nullable === true) return true;
+        const declared = Array.isArray(definition.type) ? definition.type : [definition.type];
+        const unions = [...(definition.anyOf ?? []), ...(definition.oneOf ?? [])];
+        return declared.includes("null") || unions.some((item) => item.type === "null" || item.const === null);
+      };
+      const nullableRequired = required.every((name) => properties[name] && acceptsNull(properties[name]));
+      if (required.length > 0 && !nullableRequired) {
+        console.log(`Read-only KB probe skipped; required arguments do not all accept null: ${required.join(", ")}.`);
+        for (const name of required) {
+          const definition = properties[name] ?? {};
+          const typeOptions = [...(definition.anyOf ?? []), ...(definition.oneOf ?? [])];
           const types = definition.type ?? (typeOptions.map((option) => option.type).filter(Boolean).join("|") || "unspecified");
           const description = definition.description ? safeText(definition.description) : "";
           console.log(`- ${safeText(name)}: type=${safeText(types)}${description ? `; ${description}` : ""}`);
@@ -198,12 +206,13 @@ try {
       } else {
         try {
           const probeId = nextId++;
+          const args = Object.fromEntries(required.map((name) => [name, null]));
           const probe = assertReply(
             await post({
               jsonrpc: "2.0",
               id: probeId,
               method: "tools/call",
-              params: { name: listTool.name, arguments: {} },
+              params: { name: listTool.name, arguments: args },
             }),
             probeId,
             "read-only KB probe",
