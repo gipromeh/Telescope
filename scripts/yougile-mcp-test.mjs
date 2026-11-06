@@ -188,6 +188,13 @@ try {
         : [];
       if (required.length > 0) {
         console.log(`Read-only KB probe skipped; required arguments: ${required.join(", ")}.`);
+        const properties = listTool.inputSchema?.properties ?? {};
+        for (const [name, definition] of Object.entries(properties)) {
+          const typeOptions = definition.anyOf ?? definition.oneOf ?? [];
+          const types = definition.type ?? typeOptions.map((option) => option.type).filter(Boolean).join("|") || "unspecified";
+          const description = definition.description ? safeText(definition.description) : "";
+          console.log(`- ${safeText(name)}: type=${safeText(types)}${description ? `; ${description}` : ""}`);
+        }
       } else {
         try {
           const probeId = nextId++;
