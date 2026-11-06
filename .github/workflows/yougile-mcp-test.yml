@@ -2,6 +2,12 @@ name: YouGile MCP Test
 
 on:
   workflow_dispatch:
+    inputs:
+      inspect_kb_pages:
+        description: "Run the optional read-only kb_list_pages probe (response details are suppressed)"
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -23,4 +29,5 @@ jobs:
         env:
           YOUGILE_MCP_URL: ${{ secrets.YOUGILE_MCP_URL }}
           YOUGILE_MCP_TOKEN: ${{ secrets.YOUGILE_MCP_TOKEN }}
+          YOUGILE_MCP_INSPECT_KB: ${{ inputs.inspect_kb_pages }}
         run: node scripts/yougile-mcp-test.mjs

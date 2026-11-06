@@ -178,7 +178,40 @@ try {
     for (const name of matches) console.log(`  - ${name}`);
   }
 
-  console.log("Diagnostic is read-only: only initialize, initialized notification, and tools/list were sent.");
+  if (process.env.YOUGILE_MCP_INSPECT_KB === "true") {
+    const listTool = toolsReply.tools.find((item) => item?.name === "kb_list_pages");
+    if (!listTool) {
+      console.log("Read-only KB probe: kb_list_pages tool not found.");
+    } else {
+      const required = Array.isArray(listTool.inputSchema?.required)
+        ? listTool.inputSchema.required
+        : [];
+      if (required.length > 0) {
+        console.log(`Read-only KB probe skipped; required arguments: ${required.join(", ")}.`);
+      } else {
+        try {
+          const probeId = nextId++;
+          const probe = assertReply(
+            await post({
+              jsonrpc: "2.0",
+              id: probeId,
+              method: "tools/call",
+              params: { name: listTool.name, arguments: {} },
+            }),
+            probeId,
+            "read-only KB probe",
+          );
+          console.log(probe.isError === true
+            ? "Read-only KB probe returned an error; response details suppressed."
+            : "Read-only KB probe succeeded; response details suppressed.");
+        } catch {
+          console.log("Read-only KB probe failed; response details suppressed.");
+        }
+      }
+    }
+  }
+
+  console.log("Diagnostic is read-only; no YouGile data was changed.");
 } catch (error) {
   console.error(safeText(error instanceof Error ? error.message : "Unknown diagnostic failure."));
   process.exitCode = 1;
