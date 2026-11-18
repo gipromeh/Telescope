@@ -10,6 +10,7 @@
 - [Архив редакций проект-задания ТЗ-ОМО-001](Development/CONCEPT/REVISIONS/)
 - [Конструкторская разработка — Development](Development/README.md)
 - [Паспорт проекта](PROJECT/PASSPORT.md)
+- [ТЗ № 3 — сборка, юстировка и контроль](ASSEMBLY/TECHNICAL_ASSIGNMENT_ASSEMBLY_ALIGNMENT_CONTROL.md)
 - [Технические требования](PROJECT/REQUIREMENTS.md)
 - [Открытые вопросы](PROJECT/OPEN_QUESTIONS.md)
 - [Журнал инженерных решений](PROJECT/DECISIONS.md)
